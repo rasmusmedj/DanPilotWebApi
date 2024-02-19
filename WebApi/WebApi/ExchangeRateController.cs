@@ -15,10 +15,10 @@ public class ExchangeRateController : ControllerBase
         _exchangeRateService = exchangeRateService;
     }
 
-    [HttpGet("Latest")]
-    public async Task<IActionResult> GetLatestRates()
+    [HttpGet]
+    public async Task<IActionResult> All()
     {
-        var rates = await _exchangeRateService.LatestRatesAsync();
+        var rates = await _exchangeRateService.GetAllRatesAsync();
 
         if (rates is null || rates.Rates.Count is 0)
         {
@@ -28,16 +28,30 @@ public class ExchangeRateController : ControllerBase
         return Ok(rates);
     }
 
-    [HttpGet("Single")]
-    public async Task<IActionResult> GetSingleRate(string currencyCode)
+    [HttpGet("{currencyCode}")]
+    public async Task<IActionResult> ByCurrencyCode([FromRoute] string currencyCode)
     {
-        var rate = await _exchangeRateService.SingleRateAsync(currencyCode);
+        var rate = await _exchangeRateService.GetByCurrencyCode(currencyCode);
         
         if (rate is null || rate.Count is 0)
         {
-            return NotFound();
+            return NotFound($"Currency Code: \"{currencyCode}\" was not found");
         }
         
         return Ok(rate);
     }
+    
+    [HttpGet("convert")]
+    public async Task<IActionResult> ConvertByCurrencyCodes([FromQuery] string sourceCurrency, [FromQuery] string targetCurrency)
+    {
+        var rate = await _exchangeRateService.GetRateByCurrencyCodesAsync( sourceCurrency, targetCurrency);
+    
+        if (!rate.HasValue)
+        {
+            return NotFound("One of the specified currencies is not available.");
+        }
+
+        return Ok(new ConversionResponse(sourceCurrency, targetCurrency, rate));
+    }
+
 }

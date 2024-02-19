@@ -4,7 +4,6 @@ using WebApi.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient<IExchangeRateService, ExchangeRateService>();
-
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
@@ -18,8 +17,4 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-// app.MapGet("/", () => "Hello World!");
-
 app.Run();
-
-// TODO:Use awesome keywords to make the API user friendly with Swagger UI

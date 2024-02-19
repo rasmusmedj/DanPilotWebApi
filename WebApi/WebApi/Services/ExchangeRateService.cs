@@ -7,14 +7,14 @@ namespace WebApi.Services;
 public class ExchangeRateService : IExchangeRateService
 {
     private readonly HttpClient _httpClient;
-    private const string apiUrl = "https://cdn.forexvalutaomregner.dk/api/latest.json";
+    private readonly string apiUrl = "https://cdn.forexvalutaomregner.dk/api/latest.json";
 
     public ExchangeRateService()
     {
         _httpClient = new HttpClient();
     }
 
-    public async Task<ExchangeRates?> LatestRatesAsync()
+    public async Task<ExchangeRates?> GetAllRatesAsync()
     {
         var response = await _httpClient.GetAsync(apiUrl);
         response.EnsureSuccessStatusCode();
@@ -24,15 +24,27 @@ public class ExchangeRateService : IExchangeRateService
         return exchangeRates;
     }
 
-    public async Task<Dictionary<string, double>?> SingleRateAsync(string currencyCode)
+    public async Task<Dictionary<string, double>?> GetByCurrencyCode(string currencyCode)
     {
-        var exchangeRates = await LatestRatesAsync();
-        if (exchangeRates != null && exchangeRates.Rates.ContainsKey(currencyCode))
+        var exchangeRates = await GetAllRatesAsync();
+        if (exchangeRates != null && exchangeRates.Rates.TryGetValue(currencyCode, out var rate))
         {
-            var rate = exchangeRates.Rates[currencyCode];
             return new Dictionary<string, double> {{currencyCode, rate}};
         }
 
         return null;
+    }
+    
+    public async Task<double?> GetRateByCurrencyCodesAsync(string sourceCurrency, string targetCurrency)
+    {
+        var rates = await GetAllRatesAsync();
+        if (rates == null || !rates.Rates.TryGetValue(sourceCurrency, out var v1) || !rates.Rates.TryGetValue(targetCurrency, out var v2))
+        {
+            return null;
+        }
+
+        var rate = v2 / v1;
+        
+        return rate;
     }
 }

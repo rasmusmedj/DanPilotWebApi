@@ -4,6 +4,7 @@ namespace WebApi.Interfaces;
 
 public interface IExchangeRateService
 {
-    Task<ExchangeRates?> LatestRatesAsync();
-    Task<Dictionary<string, double>?> SingleRateAsync(string currencyCode);
+    Task<ExchangeRates?> GetAllRatesAsync();
+    Task<Dictionary<string, double>?> GetByCurrencyCode(string currencyCode);
+    Task<double?> GetRateByCurrencyCodesAsync(string sourceCurrency, string targetCurrency);
 }
