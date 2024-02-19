@@ -9,9 +9,9 @@ public class ExchangeRateService : IExchangeRateService
     private readonly HttpClient _httpClient;
     private string apiUrl = "https://cdn.forexvalutaomregner.dk/api/latest.json";
 
-    public ExchangeRateService(HttpClient httpClient) // TODO: Maybe delete?
+    public ExchangeRateService()
     {
-        _httpClient = httpClient;
+        _httpClient = new HttpClient();
     }
     
     public async Task<ExchangeRates> GetLatestRatesAsync()

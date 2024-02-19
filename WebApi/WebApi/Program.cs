@@ -1,30 +1,35 @@
-using Microsoft.OpenApi.Models;
-using WebApi;
 using WebApi.Interfaces;
 using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>();
-builder.Services.AddTransient<ExchangeRateService>();
+// builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>();
 
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Currency API", Version = "v1" });
-});
+// builder.Services.AddSwaggerGen(c =>
+// {
+//     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Currency API", Version = "v1" });
+// });
 
+builder.Services.AddTransient<IExchangeRateService, ExchangeRateService>();
+
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
 app.UseSwagger();
-app.UseSwaggerUI(c =>
+app.UseSwaggerUI();
+app.UseRouting();
+app.UseEndpoints(endpoints =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Currency API V1");
+    endpoints.MapControllers();
 });
 
-app.MapGet("/", () => "Hello World!");
+// app.MapGet("/", () => "Hello World!");
 
 app.Run();
+
+// TODO: Make swagger work :')
 
 // TODO: Create service for reaching endpoint
 
