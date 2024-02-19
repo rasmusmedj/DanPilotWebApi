@@ -7,16 +7,17 @@ namespace WebApi.Services;
 public class ExchangeRateService : IExchangeRateService
 {
     private readonly HttpClient _httpClient;
-    private readonly string apiUrl = "https://cdn.forexvalutaomregner.dk/api/latest.json";
+    private readonly string? _apiUrl;
 
-    public ExchangeRateService()
+    public ExchangeRateService(IConfiguration configuration)
     {
         _httpClient = new HttpClient();
+        _apiUrl = configuration.GetValue<string>("ExchangeRatesApi:Url");
     }
 
     public async Task<ExchangeRates?> GetAllRatesAsync()
     {
-        var response = await _httpClient.GetAsync(apiUrl);
+        var response = await _httpClient.GetAsync(_apiUrl);
         response.EnsureSuccessStatusCode();
         var jsonString = await response.Content.ReadAsStringAsync();
         var exchangeRates = JsonSerializer.Deserialize<ExchangeRates>(jsonString);

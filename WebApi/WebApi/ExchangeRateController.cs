@@ -53,5 +53,4 @@ public class ExchangeRateController : ControllerBase
 
         return Ok(new ConversionResponse(sourceCurrency, targetCurrency, rate));
     }
-
 }
