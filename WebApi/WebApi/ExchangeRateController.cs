@@ -42,6 +42,8 @@ public class ExchangeRateController : ControllerBase
     }
     
     [HttpGet("convert")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ConversionResponse))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ConvertByCurrencyCodes([FromQuery] string sourceCurrency, [FromQuery] string targetCurrency)
     {
         var rate = await _exchangeRateService.GetRateByCurrencyCodesAsync( sourceCurrency, targetCurrency);
