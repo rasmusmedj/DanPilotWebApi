@@ -22,10 +22,4 @@ app.UseEndpoints(endpoints =>
 
 app.Run();
 
-// TODO: Make swagger work :')
-
-// TODO: Create service for reaching endpoint
-
-// TODO: Make Controller
-
 // TODO:Use awesome keywords to make the API user friendly with Swagger UI
