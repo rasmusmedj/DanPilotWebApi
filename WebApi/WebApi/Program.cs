@@ -3,13 +3,6 @@ using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>();
-
-// builder.Services.AddSwaggerGen(c =>
-// {
-//     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My Currency API", Version = "v1" });
-// });
-
 builder.Services.AddTransient<IExchangeRateService, ExchangeRateService>();
 
 builder.Services.AddSwaggerGen();
